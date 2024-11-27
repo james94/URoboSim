@@ -33,7 +33,7 @@ namespace u_robo_sim_communication
 
 			virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 			{
-				Command = JsonObject->GetStringField("command");
+				Command = JsonObject->GetStringField(TEXT("command"));
 			}
 
 			static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -90,8 +90,8 @@ namespace u_robo_sim_communication
 
 			virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 			{
-				bSuccess = JsonObject->GetBoolField("success");
-				StatusMessage = JsonObject->GetStringField("status_message");
+				bSuccess = JsonObject->GetBoolField(TEXT("success"));
+				StatusMessage = JsonObject->GetStringField(TEXT("status_message"));
 			}
 
 			static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

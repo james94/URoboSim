@@ -50,7 +50,7 @@ namespace unreal_controller_manager
 				for (auto &ptr : ValuesPtrArr)
 					JointNames.Add(ptr->AsString());
 
-				RobotName = JsonObject->GetStringField("robot_name");
+				RobotName = JsonObject->GetStringField(TEXT("robot_name"));
 			}
 
 			static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -112,8 +112,8 @@ namespace unreal_controller_manager
 
 			virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 			{
-				bSuccess = JsonObject->GetBoolField("success");
-				StatusMessage = JsonObject->GetStringField("status_message");
+				bSuccess = JsonObject->GetBoolField(TEXT("success"));
+				StatusMessage = JsonObject->GetStringField(TEXT("status_message"));
 			}
 
 			static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

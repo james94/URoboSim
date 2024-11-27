@@ -57,8 +57,8 @@ namespace json_prolog_msgs
                   virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
                   {
                     // Mode = std_msgs::Byte::GetFromJson(JsonObject->GetObjectField(TEXT("mode")));
-                    Id = JsonObject->GetStringField("id");
-                    Query = JsonObject->GetStringField("query");
+                    Id = JsonObject->GetStringField(TEXT("id"));
+                    Query = JsonObject->GetStringField(TEXT("query"));
                   }
 
                   static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -117,8 +117,8 @@ namespace json_prolog_msgs
             }
             virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
             {
-              bOk = JsonObject->GetBoolField("ok");
-              Message = JsonObject->GetStringField("message");
+              bOk = JsonObject->GetBoolField(TEXT("ok"));
+              Message = JsonObject->GetStringField(TEXT("message"));
               if(bOk)
                 {
                   UE_LOG(LogTemp, Log, TEXT("Query ok"));

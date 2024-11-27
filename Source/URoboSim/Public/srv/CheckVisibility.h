@@ -68,7 +68,7 @@ namespace urobosim_msgs
                   virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
                   {
 
-                    ObjectName = JsonObject->GetStringField("object_name");
+                    ObjectName = JsonObject->GetStringField(TEXT("object_name"));
                     // BasePose = geometry_msgs::Pose::GetFromJson(JsonObject->GetObjectField(TEXT("base_pose")));
                     // LookAtPosition = geometry_msgs::Point::GetFromJson(JsonObject->GetObjectField(TEXT("look_at_position")));
 
@@ -130,7 +130,7 @@ namespace urobosim_msgs
 
             virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
             {
-              bVisible = JsonObject->GetBoolField("visible");
+              bVisible = JsonObject->GetBoolField(TEXT("visible"));
             }
 
             static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

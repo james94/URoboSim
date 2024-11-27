@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RServiceServer.h"
+#include "Controller/ControllerType/SpecialController/RCameraController.h"
 // clang-format off
 #include "CheckVisibilityServer.generated.h"
 // clang-format on

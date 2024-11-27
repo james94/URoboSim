@@ -1,6 +1,7 @@
 #pragma once
 #include "ROSBridgeSrv.h"
-// #include "Pose.h"
+
+#include "geometry_msgs/Pose.h"
 
 class UROBOSIM_API FROSMoveObjectSrv : public FROSBridgeSrv
 {
@@ -40,8 +41,8 @@ public:
 
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			Name = JsonObject->GetStringField("name");
-			Pose.FromJson(JsonObject->GetObjectField("pose"));
+			Name = JsonObject->GetStringField(TEXT("name"));
+			Pose.FromJson(JsonObject->GetObjectField(TEXT("pose")));
 		}
 
 		static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -86,7 +87,7 @@ public:
 
 		virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 		{
-			Success = JsonObject->GetBoolField("success");
+			Success = JsonObject->GetBoolField(TEXT("success"));
 		}
 
 		static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

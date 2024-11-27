@@ -1,4 +1,5 @@
 #include "RobotInterface.h"
+#include "Controller/RControllerComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRobotInterface, Log, All);
 

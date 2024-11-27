@@ -1,9 +1,11 @@
 
 #include "RStaticMeshEditUtils.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 
+// Now we use Unreal Engine's Built In Convex Decomposition Tools
 // necessary for Collision creation
 // #include "Private/ConvexDecompTool.h"
-#include "Editor/UnrealEd/Private/ConvexDecompTool.h"
+// #include "Editor/UnrealEd/Private/ConvexDecompTool.h"
 // necessary for Collision creation KDOP
 
 #include "Runtime/Engine/Classes/PhysicsEngine/BodySetup.h"
@@ -19,6 +21,8 @@
 #define USE_ASYNC_DECOMP 0
 #endif
 
+
+// Ref: https://www.perplexity.ai/search/you-are-a-software-engineer-wi-GsVq_LksTjejC2PcsyuO3g
 
 UStaticMesh* RStaticMeshUtils::LoadMesh(UStaticMeshComponent* InOwner, UStaticMesh* Mesh)
 {
@@ -97,16 +101,16 @@ UStaticMesh* RStaticMeshUtils::LoadMesh(UStaticMeshComponent* InOwner, UStaticMe
 
 void RStaticMeshUtils::CreateComplexCollision(UStaticMesh* OutMesh, uint32 InHullCount, int32 InMaxHullVerts, uint32 InHullPrecision)
 {
-	if(OutMesh && OutMesh->RenderData)
+	if(OutMesh && OutMesh->GetRenderData())
 	{
-		FStaticMeshLODResources& LODModel = OutMesh->RenderData->LODResources[0];
+		FStaticMeshLODResources& LODModel = OutMesh->GetRenderData()->LODResources[0];
 
 		int32 NumVerts = LODModel.VertexBuffers.StaticMeshVertexBuffer.GetNumVertices();
 		TArray<FVector> Verts;
 
 		for(int32 i=0; i<NumVerts; i++)
 		{
-			FVector Vert = LODModel.VertexBuffers.PositionVertexBuffer.VertexPosition(i);
+			FVector Vert = FVector(LODModel.VertexBuffers.PositionVertexBuffer.VertexPosition(i));
 			Verts.Add(Vert);
 		}
 
@@ -127,10 +131,18 @@ void RStaticMeshUtils::CreateComplexCollision(UStaticMesh* OutMesh, uint32 InHul
 			}
 		}
 
+    // Convert the CollidingIndices from int to uint32 array
+    TArray<int32> ConvertedCollidingIndices;
+    ConvertedCollidingIndices.Reserve(CollidingIndices.Num());
+    for (uint32 Index : CollidingIndices)
+    {
+      ConvertedCollidingIndices.Add(static_cast<int32>(Index));
+    }
+
 		FlushRenderingCommands();
 
 		// Get the BodySetup we are going to put the collision into
-		UBodySetup* bs = OutMesh->BodySetup;
+		UBodySetup* bs = OutMesh->GetBodySetup();
 		if(bs)
 		{
 			bs->RemoveSimpleCollision();
@@ -139,29 +151,54 @@ void RStaticMeshUtils::CreateComplexCollision(UStaticMesh* OutMesh, uint32 InHul
 		{
 			// Otherwise, create one here.
 			OutMesh->CreateBodySetup();
-			bs = OutMesh->BodySetup;
+			bs = OutMesh->GetBodySetup();
 		}
 
-
+    // Use Verts and CollidingIndices to create a custom collision geometry
 		if(Verts.Num() >= 3 && CollidingIndices.Num() >= 3)
 		{
-			DecomposeMeshToHulls(bs, Verts, CollidingIndices, InHullCount, InMaxHullVerts, InHullPrecision);
+      bs->CreatePhysicsMeshes();
+      bs->CollisionTraceFlag = CTF_UseComplexAsSimple;
+
+      FKAggregateGeom& AggGeom = bs->AggGeom;
+      AggGeom.EmptyElements();
+
+      FKConvexElem ConvexElem;
+      ConvexElem.VertexData = Verts;
+      // ConvexElem.IndexData = CollidingIndices;
+      ConvexElem.IndexData = ConvertedCollidingIndices;
+      ConvexElem.ElemBox = FBox(Verts);
+
+      AggGeom.ConvexElems.Add(ConvexElem);
+
+			// DecomposeMeshToHulls(bs, Verts, CollidingIndices, InHullCount, InMaxHullVerts, InHullPrecision);
+
+      UE_LOG(LogTemp, Log, TEXT("Placeholder for Editor/UnrealEd/Private/ConvexDecompTool DecomposeMeshToHulls!"));
 		}
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("To few Verts or CollidingIndices!"));
 		}
 
+    // Set up the collision parameters
+    bs->DefaultInstance.SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
+    // bs->bGenerateComplexAsSimpleCollision = false;
+    // bs->OptimizationSettings.MaxHullVertices = InMaxHullVerts;
+    // bs->OptimizationSettings.HullAccuracy = InHullPrecision;
 
 		// refresh collision change back to staticmesh components
 		RefreshCollisionChange(*OutMesh);
 
+    // Finalize the collision setup
+    // OutMesh->BuildFromSource();
+    // OutMesh->Build();
 		OutMesh->MarkPackageDirty();
 		OutMesh->bCustomizedCollision = true;	//mark the static mesh for collision customization
+    // OutMesh->PostEditChange();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Mesh or RenderData not found."));
+		UE_LOG(LogTemp, Error, TEXT("Mesh or GetRenderData() not found."));
 	}
 }
 
@@ -467,7 +504,7 @@ UStaticMesh* RStaticMeshUtils::CreateStaticMesh(UPackage* InPackage, FString InP
           StaticMesh = NewObject<UStaticMesh>(Package, MeshName, RF_Public | RF_Standalone);
           StaticMesh->InitResources();
 
-          StaticMesh->LightingGuid = FGuid::NewGuid();
+          StaticMesh->SetLightingGuid(FGuid::NewGuid());
 
           // Add source to new StaticMesh
           FStaticMeshSourceModel& SrcModel = StaticMesh->AddSourceModel();
@@ -493,7 +530,7 @@ UStaticMesh* RStaticMeshUtils::CreateStaticMesh(UPackage* InPackage, FString InP
             {
               // UMaterialInterface* Material = Kvp.Key;
               UMaterialInterface* Material = Kvp;
-              StaticMesh->StaticMaterials.Add(FStaticMaterial(Material, Material->GetFName(), Material->GetFName()));
+              StaticMesh->GetStaticMaterials().Add(FStaticMaterial(Material, Material->GetFName(), Material->GetFName()));
             }
 
           //Set the Imported version before calling the build

@@ -121,7 +121,7 @@ namespace urobosim_msgs
 
             virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
             {
-              bSuccess = JsonObject->GetBoolField("success");
+              bSuccess = JsonObject->GetBoolField(TEXT("success"));
             }
 
             static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

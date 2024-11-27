@@ -16,8 +16,8 @@ public class URoboSimEditor : ModuleRules
         PublicDependencyModuleNames.AddRange(
 			new string[]
                         {
-                            "Core"
-                            ,"MeshDescription",
+                            "Core",
+                            "MeshDescription",
                             "RenderCore",
                             "Json",
                         }
@@ -34,12 +34,12 @@ public class URoboSimEditor : ModuleRules
 				"URoboVision",
 				"UROSBridge",
 				"SlateCore",
-                                "XmlParser",
-                                "CustomMeshComponent",
-                                "ProceduralMeshComponent",
-                                "URoboSim",
-                                "URoboVision",
-                                "UnrealEd",
+                "XmlParser",
+                "CustomMeshComponent",
+                "ProceduralMeshComponent",
+                "URoboSim",
+                "URoboVision",
+                "UnrealEd",
 			}
 			);
 

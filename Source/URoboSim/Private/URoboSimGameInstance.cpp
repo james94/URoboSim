@@ -1,4 +1,6 @@
 #include "URoboSimGameInstance.h"
+#include "sensor_msgs/JointState.h"
+#include "std_msgs/Header.h"
 
 URoboSimGameInstance::URoboSimGameInstance()
 {

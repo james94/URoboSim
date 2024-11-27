@@ -11,20 +11,24 @@ URModelFactory::URModelFactory(const FObjectInitializer& ObjectInitializer) : Su
     NewActorClass = ARModel::StaticClass();
 }
 
-bool URModelFactory::CanCreateActorFrom(const FAssetData & AssetData, FText & OutErrorMsg)
-{
-    // Only designed for SDFData Asset.
-    return AssetData.GetClass()->IsChildOf( USDFDataAsset::StaticClass());
-    // return AssetData.AssetClass.IsEqual(FName("SDFDataAsset"));
-}
+// This method causes a static assertion error I found in Unreal Engine 5.5.0
+// bool URModelFactory::CanCreateActorFrom(const FAssetData & AssetData, FText & OutErrorMsg)
+// {
+//     // Only designed for SDFData Asset.
+//     return AssetData.GetClass()->IsChildOf( USDFDataAsset::StaticClass());
+//     // return AssetData.AssetClass.IsEqual(FName("SDFDataAsset"));
+// }
 
 AActor* URModelFactory::GetDefaultActor(const FAssetData & AssetData)
 {
     return NewActorClass->GetDefaultObject<ARModel>();
 }
 
+// previous SpawnActor signature: https://github.com/urobosim/URoboSim
+// AActor* URModelFactory::SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform & Transform, EObjectFlags InObjectFlags, const FName Name)
 
-AActor* URModelFactory::SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform & Transform, EObjectFlags InObjectFlags, const FName Name)
+// Unreal Engine 5.5.0 function signature API has changed to, but below one causes CoreUObject static assertion error
+AActor* URModelFactory::SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform& Transform, const FActorSpawnParameters& InSpawnParams)
 {
   USDFDataAsset* SDFAsset = CastChecked<USDFDataAsset>(Asset);
   if(SDFAsset)
@@ -37,7 +41,8 @@ AActor* URModelFactory::SpawnActor(UObject* Asset, ULevel* InLevel, const FTrans
             {
               FActorSpawnParameters SpawnInfo;
               SpawnInfo.OverrideLevel = InLevel;
-              SpawnInfo.ObjectFlags = InObjectFlags;
+              // SpawnInfo.ObjectFlags = InObjectFlags;
+              SpawnInfo.ObjectFlags = InSpawnParams.ObjectFlags;
               SpawnInfo.NameMode = FActorSpawnParameters::ESpawnActorNameMode::Requested;
 
               //TODO fix name of spawned model

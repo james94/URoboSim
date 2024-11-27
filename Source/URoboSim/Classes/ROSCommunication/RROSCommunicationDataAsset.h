@@ -36,6 +36,8 @@ struct FRPublisherConfiguration
   GENERATED_BODY()
 
 public:
+  FRPublisherConfiguration() : PublisherParameters(nullptr) {}
+
   UPROPERTY(EditAnywhere)
   URPublisherParameter *PublisherParameters;
 };
@@ -46,6 +48,8 @@ struct FRSubscriberConfiguration
   GENERATED_BODY()
 
 public:
+  FRSubscriberConfiguration() : SubscriberParameters(nullptr) {}
+
   UPROPERTY(EditAnywhere)
   URSubscriberParameter *SubscriberParameters;
 };
@@ -56,6 +60,8 @@ struct FRServiceServerConfiguration
   GENERATED_BODY()
 
 public:
+  FRServiceServerConfiguration() : ServiceServerParameters(nullptr) {}
+
   UPROPERTY(EditAnywhere)
   URServiceServerParameter *ServiceServerParameters;
 };
@@ -66,6 +72,8 @@ struct FRServiceClientConfiguration
   GENERATED_BODY()
 
 public:
+  FRServiceClientConfiguration() : ServiceClientParameters(nullptr) {}
+
   UPROPERTY(EditAnywhere)
   URServiceClientParameter *ServiceClientParameters;
 };
@@ -76,6 +84,8 @@ struct FRActionServerConfiguration
   GENERATED_BODY()
 
 public:
+  FRActionServerConfiguration() : ActionServerParameters(nullptr) {}
+
   UPROPERTY(EditAnywhere)
   URActionServerParameter *ActionServerParameters;
 };

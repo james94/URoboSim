@@ -27,13 +27,19 @@ private:
      * Checks if AssetData is intended for the factory.
      * Checks if an RRobot can be built by AssetData.
      */
-    virtual bool CanCreateActorFrom(const FAssetData& AssetData, FText& OutErrorMsg) override;
+    // This method causes a static assertion error I found in Unreal Engine 5.5.0
+    // virtual bool CanCreateActorFrom(const FAssetData& AssetData, FText& OutErrorMsg) override;
 
     /** Initialize NewActorClass if necessary, and return default actor for that class. */
     virtual AActor* GetDefaultActor(const FAssetData& AssetData) override;
 
     /** Spawns the robot */
-    virtual AActor* SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform& Transform, EObjectFlags ObjectFlags, const FName Name) override;
+    // previous SpawnActor signature: https://github.com/urobosim/URoboSim
+    // virtual AActor* SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform& Transform, EObjectFlags ObjectFlags, const FName Name) override;
+
+    // TODO (JG): Unreal Engine 5.5.0 function signature API has changed to, but below one causes CoreUObject static assertion error
+    virtual AActor* SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform& Transform, const FActorSpawnParameters& InSpawnParams) override;
+
 
     /** Subclasses may implement this to modify the actor after it has been spawned
         IMPORTANT: If you override this, you should usually also override PostCreateBlueprint()! */

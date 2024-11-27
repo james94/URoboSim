@@ -1,8 +1,9 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "Factory/RROSCommunicationFactory.h"
 #include "Factory/RROSCommunicationBuilder.h"
-#include "Editor/EditorEngine.h"
 #include "Kismet/GameplayStatics.h"
-#include "Physics/RModel.h"
 
 URROSCommunicationFactory::URROSCommunicationFactory(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -12,18 +13,20 @@ URROSCommunicationFactory::URROSCommunicationFactory(const FObjectInitializer &O
   bDrag = false;
 }
 
-bool URROSCommunicationFactory::CanCreateActorFrom(const FAssetData &AssetData, FText &OutErrorMsg)
-{
-  // Only designed for ControllerAsset Asset.
-  return AssetData.GetClass()->IsChildOf(URROSCommunicationDataAsset::StaticClass());
-}
+// This method causes a static assertion error I found in Unreal Engine 5.5.0
+// bool URROSCommunicationFactory::CanCreateActorFrom(const FAssetData &AssetData, FText &OutErrorMsg)
+// {
+//   // Only designed for ControllerAsset Asset.
+//   return AssetData.GetClass()->IsChildOf(URROSCommunicationDataAsset::StaticClass());
+// }
 
 AActor *URROSCommunicationFactory::GetDefaultActor(const FAssetData &AssetData)
 {
   return NewActorClass->GetDefaultObject<AActor>();
 }
 
-AActor *URROSCommunicationFactory::SpawnActor(UObject *Asset, ULevel *InLevel, const FTransform &Transform, EObjectFlags InObjectFlags, const FName Name)
+// Unreal Engine 5.5.0 function signature API has changed to, but below one causes CoreUObject static assertion error
+AActor* URROSCommunicationFactory::SpawnActor(UObject* Asset, ULevel* InLevel, const FTransform& Transform, const FActorSpawnParameters& InSpawnParams)
 {
   if (bDrag)
   {

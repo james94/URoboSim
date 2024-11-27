@@ -39,6 +39,13 @@ struct FJointInformation
   GENERATED_BODY()
   public:
 
+  FJointInformation()
+    : Parent(nullptr),
+      Child(nullptr),
+      RefAxis(FVector::ZeroVector),
+      Upper(0.0f),
+      Lower(0.0f),
+      QInitial(FQuat::Identity) {}
 
   UPROPERTY()
   URLink* Parent;

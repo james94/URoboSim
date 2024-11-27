@@ -12,18 +12,23 @@ URControllerFactory::URControllerFactory(const FObjectInitializer &ObjectInitial
   bDrag = false;
 }
 
-bool URControllerFactory::CanCreateActorFrom(const FAssetData &AssetData, FText &OutErrorMsg)
-{
-  // Only designed for ControllerAsset Asset.
-  return AssetData.GetClass()->IsChildOf(URControllerDataAsset::StaticClass());
-}
+// This method causes a static assertion error I found in Unreal Engine 5.5.0
+// bool URControllerFactory::CanCreateActorFrom(const FAssetData &AssetData, FText &OutErrorMsg)
+// {
+//   // Only designed for ControllerAsset Asset.
+//   return AssetData.GetClass()->IsChildOf(URControllerDataAsset::StaticClass());
+// }
 
 AActor *URControllerFactory::GetDefaultActor(const FAssetData &AssetData)
 {
   return NewActorClass->GetDefaultObject<AActor>();
 }
 
-AActor *URControllerFactory::SpawnActor(UObject *Asset, ULevel *InLevel, const FTransform &Transform, EObjectFlags InObjectFlags, const FName Name)
+// previous SpawnActor signature: https://github.com/urobosim/URoboSim
+// AActor *URControllerFactory::SpawnActor(UObject *Asset, ULevel *InLevel, const FTransform &Transform, EObjectFlags InObjectFlags, const FName Name)
+
+// Unreal Engine 5.5.0 function signature API has changed to, but below one causes CoreUObject static assertion error
+AActor *URControllerFactory::SpawnActor(UObject *Asset, ULevel *InLevel, const FTransform &Transform, const FActorSpawnParameters &InSpawnParams)
 {
   if (bDrag)
   {

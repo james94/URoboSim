@@ -12,11 +12,13 @@ DEFINE_LOG_CATEGORY_STATIC(LogRROSCommunicationComponent, Log, All);
 FRROSCommunicationContainer::FRROSCommunicationContainer()
     : FRROSCommunicationContainer::FRROSCommunicationContainer(TEXT("127.0.0.1"), 9090)
 {
+  Owner = nullptr;
 }
 
 FRROSCommunicationContainer::FRROSCommunicationContainer(const FString &InWebsocketIPAddr, const uint32 &InWebsocketPort)
     : WebsocketIPAddr(InWebsocketIPAddr), WebsocketPort(InWebsocketPort)
 {
+  Owner = nullptr;
 }
 
 void FRROSCommunicationContainer::Init(UObject* InOwner)

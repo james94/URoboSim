@@ -1,5 +1,6 @@
 #include "ROSCommunication/Action/Server/PR2HeadAction/PR2HAGoalSubscriber.h"
 #include "pr2_controllers_msgs/PR2PointHeadActionGoal.h"
+#include "Conversions.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRPR2HAGoalSubscriber, Log, All)
 

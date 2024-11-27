@@ -540,7 +540,7 @@ FVector ISDFParserInterface::XyzToFVector(const FString& InXyzData)
 
   // Unsupported <pose> format, return default transform
   UE_LOG(LogTemp, Warning, TEXT("[%s][%d] <xyz>%s</xyz> is an unsupported format!"),
-         __FUNCTION__, __LINE__, *InXyzData);
+         *FString(__FUNCTION__), __LINE__, *InXyzData);
   return FVector();
 }
 
@@ -560,7 +560,7 @@ FVector ISDFParserInterface::SizeToFVector(const FString& InSizeData)
 
   // Unsupported <pose> format, return default transform
   UE_LOG(LogTemp, Warning, TEXT("[%s][%d] <size>%s</size> is an unsupported format!"),
-         __FUNCTION__, __LINE__, *InSizeData);
+         *FString(__FUNCTION__), __LINE__, *InSizeData);
   return FVector();
 }
 

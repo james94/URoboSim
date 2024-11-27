@@ -45,8 +45,8 @@ namespace rosapi
 			virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 			{
 
-				Name = JsonObject->GetStringField("name");
-				Default = JsonObject->GetStringField("default");
+				Name = JsonObject->GetStringField(TEXT("name"));
+				Default = JsonObject->GetStringField(TEXT("default"));
 			}
 
 			static Request GetFromJson(TSharedPtr<FJsonObject> JsonObject)
@@ -95,7 +95,7 @@ namespace rosapi
 
 			virtual void FromJson(TSharedPtr<FJsonObject> JsonObject) override
 			{
-				Value = JsonObject->GetStringField("value");
+				Value = JsonObject->GetStringField(TEXT("value"));
 			}
 
 			static Response GetFromJson(TSharedPtr<FJsonObject> JsonObject)

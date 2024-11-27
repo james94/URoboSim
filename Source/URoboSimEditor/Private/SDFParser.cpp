@@ -8,6 +8,7 @@
 #include "GenericPlatform/GenericPlatformMisc.h"
 #include "Factories/FbxFactory.h"
 #include "RStaticMeshEditUtils.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 
 // Default constructor
 FSDFParser::FSDFParser() :  AssetRegistryModule(FModuleManager::LoadModuleChecked<FAssetRegistryModule>(FName("AssetRegistry")))
@@ -510,7 +511,8 @@ UStaticMesh* FSDFParser::CreateMesh(ESDFType InType, ESDFGeometryType InShape, F
   FString PackageName = GeneratePackageName(MeshName);
 
 
-  UPackage* Pkg = CreatePackage(NULL, *PackageName);
+  // UPackage* Pkg = CreatePackage(NULL, *PackageName);
+  UPackage* Pkg = CreatePackage(*PackageName);
   UStaticMesh* Mesh = RStaticMeshUtils::CreateStaticMesh(Pkg, PackageName, InShape, InParameters);
   CreateCollisionForMesh(Mesh, InShape);
   return Mesh;
@@ -591,7 +593,8 @@ UStaticMesh* FSDFParser::ImportMesh(const FString& Uri, ESDFType Type)
   bool bOperationCancelled = false;
 
   FString PackageName = GeneratePackageName(MeshName);
-  UPackage* Pkg = CreatePackage(NULL, *PackageName);
+  // UPackage* Pkg = CreatePackage(NULL, *PackageName);
+  UPackage* Pkg = CreatePackage(*PackageName);
   UObject* MeshObj = FbxFactory->ImportObject(
                                               UStaticMesh::StaticClass(), Pkg, MeshName, RF_Transactional | RF_Standalone | RF_Public, MeshAbsolutePath, nullptr, bOperationCancelled);
 
